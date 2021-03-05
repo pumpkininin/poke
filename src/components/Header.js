@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Navbar,Nav,NavDropdown,NavbarBrand,Form, Link, Divider, Button, Collapse, Toggle, FormControl} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {FavoriteContext} from '../contexts/Favorite'
 
 class Header extends Component{
     render(){
@@ -11,7 +12,10 @@ class Header extends Component{
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
                 <Nav.Link href="#home">Home</Nav.Link>
-                <Nav.Link href="#link">Link</Nav.Link>
+                <FavoriteContext.Consumer>
+                    {({favoriteItem}) => <Nav.Link href="#link">Favorites({favoriteItem.length})</Nav.Link>}
+                    
+                </FavoriteContext.Consumer>
                 <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                     <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                     <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>

@@ -38,7 +38,11 @@
 }
 .cards-container{
   margin: 8rem;
+  margin-bottom: 2rem;
 }
 .card-title{
   text-transform: capitalize;
 }
+.title{
+  margin-top: 2rem;
+  }

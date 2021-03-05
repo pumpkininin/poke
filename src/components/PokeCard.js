@@ -1,29 +1,40 @@
 import { render } from '@testing-library/react';
 import React, {Component} from 'react'
 import {Card, Button} from 'react-bootstrap'
+import {FavoriteContext} from '../contexts/Favorite'
 
 class PokeCard extends Component{
     constructor(props){
         super(props);
         this.state ={
-            "name":"",
-            "img":"",
-            "type":""
+            "pokemon":
+                {"name":"",
+                "img":"",
+                "type":""}
+
+            
         };
     }
     componentDidMount(){
+        this.fetchAPI();
+    }
+    componentDidUpdate(prevProps){
+        if(prevProps.id != this.props.id){
+            this.fetchAPI();
+        }
+    }
+    fetchAPI(){
         const _this = this;
         
         fetch(`https://pokeapi.co/api/v2/pokemon/${this.props.id}`)
         .then((res) => res.json())
         .then((result) =>{
-            console.log(result)
+            let poke = {"name":result.name,
+                            "img":result.sprites.other.dream_world.front_default,
+                            "type":result.types[0].type.name};
             this.setState({
-                name: result.name,
-                img: result.sprites.other.dream_world.front_default,
-                type: result.types[0].type.name
+                pokemon:poke
             })
-            console.log(this.state.type)
         }
         
         )
@@ -33,18 +44,21 @@ class PokeCard extends Component{
     }
     
     render(){
-        const name = this.state.name;
-        const img = this.state.img;
-        const type = this.state.type;
+        const pokemon = this.state.pokemon
+        
+        
         return(
             <Card style={{ width: '18rem', display: 'inline-block', margin: '1rem' }}>
-                <Card.Img variant="top" style={{height:'18rem'}} src={img} />
+                <Card.Img variant="top" style={{height:'18rem'}} src={pokemon.img} />
                 <Card.Body>
-                    <Card.Title >{name}</Card.Title>
+                    <Card.Title >{pokemon.name}</Card.Title>
                     <Card.Text>
-                        <strong>Type: {type}</strong>
+                        <strong>Type: {pokemon.type}</strong>
                     </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
+                    <FavoriteContext.Consumer>
+                        {({addToFavorites}) => <Button  onClick = {() => addToFavorites(pokemon)}  variant="primary">Add to favorite</Button> }
+                        
+                    </FavoriteContext.Consumer>
                 </Card.Body>
             </Card>
         )
